@@ -14,6 +14,7 @@
   const price = document
     .querySelector("#ProductPrice-product-template")
     ?.textContent.trim();
+  const originalPrice = document.querySelector("#ComparePrice-product-template")?.textContent.trim();
   const size = document.querySelector("#SingleOptionSelector-0")?.value;
   const color = document.querySelector("#SingleOptionSelector-1")?.value;
   const quantity = document.querySelector("#Quantity.js-qty__input")?.value;
@@ -27,12 +28,10 @@
   }
 
   if (!productTitle || !price) {
-    alert(
-      "Product information not found",
-    );
+    alert("Product information not found");
     return;
   }
-  
+
   const style = document.createElement("style");
   style.textContent = `
     @keyframes fadeUp {
@@ -81,9 +80,11 @@
       ${productTitle}
     </h2>
     <p><strong>Price:</strong> ${price}</p>
-    <p><strong>Size:</strong> ${size}</p>
-    <p><strong>Color:</strong> ${color}</p>
+    ${originalPrice ? `<p><strong>Original Price: </strong><strike>${originalPrice}</strike></p>` : ''}
+    ${size ? `<p><strong>Size:</strong> ${size}</p>` : '' }
+    ${color ? `<p><strong>Color:</strong> ${color}</p>` : ''}
     <p><strong>Quantity:</strong> ${quantity}</p>
+    <img src=${productImage} alt='Product Image'></img>
     <button id="custom-add-to-cart" style="
       background: #006eff;
       color: #fff;
@@ -102,15 +103,14 @@
     .getElementById("custom-add-to-cart")
     .addEventListener("click", () => {
       const realAddToCartBtn = document.querySelector(
-        "#AddToCart-product-template",
+        "#AddToCart-product-template"
       );
 
       realAddToCartBtn.click();
 
       setTimeout(() => {
-        
         const cartCount = quantity;
-
+        
         popup.innerHTML = `
           <h2 style="margin-top: 0; 
           font-size: 18px; 
@@ -122,10 +122,15 @@
           align-items: center;">
           <div style="display: flex; 
           align-items: center;">
-          ${productImage ? `<img src="${productImage}" alt="${productTitle}" 
+          ${
+            productImage
+              ? `<img src="${productImage}" alt="${productTitle}" 
             style="width: 75px; 
             height: auto; 
-            border-radius: 5px;" />` : ""}
+            margin-right: 5px;
+            border-radius: 5px;" />`
+              : ""
+          }
           <p><strong>${productTitle}</strong></p>
           </div>
           <p>Qty: ${quantity}</p>
